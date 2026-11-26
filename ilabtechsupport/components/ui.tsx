@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import type { Locale } from "@/lib/i18n";
+import { Photo, type PhotoName } from "./photo";
 
 export function Section({
   id,
@@ -25,7 +27,7 @@ export function Section({
       className={`${dark ? "on-dark bg-[#0b0b0c] text-white" : ""} py-20 md:py-28 ${className}`}
     >
       <div className="mx-auto max-w-7xl px-5">
-        <header className="mb-12 max-w-2xl">
+        <header className="reveal mb-12 max-w-2xl">
           {eyebrow && (
             <p
               className={`text-xs font-semibold uppercase tracking-[0.25em] ${dark ? "text-white/60" : "text-charcoal/70"}`}
@@ -58,14 +60,19 @@ export function PageHero({
   title,
   intro,
   crumbs,
+  photo,
 }: {
   title: string;
   intro?: string;
   crumbs: { name: string; href?: string }[];
+  photo?: { name: PhotoName; locale: Locale };
 }) {
   return (
-    <section className="on-dark bg-[#0b0b0c] pb-16 pt-32 text-white md:pb-20 md:pt-40">
-      <div className="mx-auto max-w-7xl px-5">
+    <section className="on-dark dark-texture bg-[#0b0b0c] pb-16 pt-32 text-white md:pb-20 md:pt-40">
+      <div
+        className={`mx-auto max-w-7xl px-5 ${photo ? "grid items-center gap-10 lg:grid-cols-[1fr_20rem]" : ""}`}
+      >
+        <div>
         <nav aria-label="Breadcrumb" className="text-sm text-white/60">
           <ol className="flex flex-wrap items-center gap-2">
             {crumbs.map((c, i) => (
@@ -91,6 +98,10 @@ export function PageHero({
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/70">
             {intro}
           </p>
+        )}
+        </div>
+        {photo && (
+          <Photo name={photo.name} locale={photo.locale} className="hidden lg:block" />
         )}
       </div>
     </section>

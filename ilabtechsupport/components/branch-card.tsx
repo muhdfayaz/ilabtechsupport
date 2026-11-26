@@ -11,7 +11,7 @@ export function BranchCard({
 }) {
   const t = UI[locale];
   return (
-    <article className="flex flex-col rounded-3xl border border-black/5 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+    <article className="reveal card-lift flex flex-col rounded-3xl border border-black/5 bg-white p-7 shadow-sm">
       <span className="grid size-11 place-items-center rounded-2xl bg-ink text-white">
         <PinIcon />
       </span>

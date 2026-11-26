@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BranchCard } from "@/components/branch-card";
 import { ArrowIcon, CheckIcon, PlusIcon } from "@/components/icons";
 import { JsonLd } from "@/components/json-ld";
+import type { PhotoName } from "@/components/photo";
 import { ButtonLink, PageHero, Section } from "@/components/ui";
 import { getBranches } from "@/lib/content";
 import { LTR, localePath, UI, type Locale } from "@/lib/i18n";
@@ -22,6 +23,13 @@ import {
 import { BRANCHES, SITE, SITE_URL, waLink } from "@/lib/site";
 
 const flip = "rtl:-scale-x-100";
+
+/** Banner image per service page; pages without a fitting image have none. */
+const SERVICE_PHOTOS: Partial<Record<string, PhotoName>> = {
+  "iphone-screen-repair": "showcase",
+  "iphone-battery-replacement": "warranty",
+  "iphone-water-damage-repair": "water",
+};
 
 const L = {
   en: {
@@ -148,6 +156,9 @@ export function ServiceLandingPage({
       <PageHero
         title={c.h1}
         intro={c.intro}
+        photo={
+          SERVICE_PHOTOS[slug] ? { name: SERVICE_PHOTOS[slug], locale } : undefined
+        }
         crumbs={[
           { name: t.home, href: localePath(locale, "/") },
           { name: SERVICES_LABEL[locale], href: localePath(locale, "/#services") },
@@ -166,7 +177,7 @@ export function ServiceLandingPage({
               </li>
             ))}
           </ul>
-          <div className="rounded-3xl border border-black/5 bg-white p-8">
+          <div className="reveal rounded-3xl border border-black/5 bg-white p-8 shadow-sm">
             <h2 className="text-2xl font-semibold">{l.how}</h2>
             <p className="mt-3 leading-relaxed text-charcoal">{c.process}</p>
             <h3 className="mt-6 text-lg font-semibold">{l.why}</h3>
@@ -193,7 +204,7 @@ export function ServiceLandingPage({
             <li key={r.slug}>
               <Link
                 href={localePath(locale, `/services/${r.slug}`)}
-                className="group flex items-center justify-between rounded-3xl border border-black/5 bg-white p-6 font-display text-lg font-semibold transition hover:shadow-lg"
+                className="group card-lift flex items-center justify-between rounded-3xl border border-black/5 bg-white p-6 font-display text-lg font-semibold"
               >
                 {r.text[locale].nav}
                 <ArrowIcon className={`transition group-hover:translate-x-1 rtl:group-hover:-translate-x-1 ${flip}`} />

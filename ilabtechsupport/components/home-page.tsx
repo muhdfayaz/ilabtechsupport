@@ -2,10 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { BranchCard } from "@/components/branch-card";
 import { Faq } from "@/components/faq";
+import { GoogleReviews } from "@/components/google-reviews";
 import { Hero } from "@/components/hero";
 import { ArrowIcon, CheckIcon, ShieldIcon } from "@/components/icons";
 import { JsonLd } from "@/components/json-ld";
+import { Photo } from "@/components/photo";
 import { RepairFinder } from "@/components/repair-finder";
+import { ServiceIcon } from "@/components/service-icons";
 import { ButtonLink, Section } from "@/components/ui";
 import {
   getBranches,
@@ -207,6 +210,10 @@ const COPY = {
 
 const flip = "rtl:-scale-x-100";
 
+/** Icons for the three highlight cards and the three "how it works" steps. */
+const PILLAR_ICONS = ["screen", "battery", "memory"];
+const STEP_ICONS = ["mic-speaker", "diagnostic", "power-button"];
+
 export function HomePage({ locale }: { locale: Locale }) {
   const c = COPY[locale];
   const t = UI[locale];
@@ -230,7 +237,7 @@ export function HomePage({ locale }: { locale: Locale }) {
       <section aria-label={c.trustAria} className="border-b border-black/5 bg-white">
         <dl className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-5 py-10 md:grid-cols-4">
           {c.trust.map((x) => (
-            <div key={x.k} className="px-2 py-3 text-center md:px-6">
+            <div key={x.k} className="reveal px-2 py-3 text-center md:px-6">
               <dt className="font-display text-4xl font-semibold md:text-5xl">
                 {x.k}
               </dt>
@@ -248,29 +255,34 @@ export function HomePage({ locale }: { locale: Locale }) {
         title={c.partnerTitle}
         intro={c.partnerIntro}
       >
-        <div className="grid gap-5 md:grid-cols-3">
-          {c.pillars.map((p, i) => (
-            <article
-              key={p.title}
-              className="rounded-3xl border border-black/5 bg-white p-8 shadow-sm"
-            >
-              <span className="font-display text-sm font-semibold text-charcoal/50">
-                0{i + 1}
-              </span>
-              <h3 className="mt-6 text-xl font-semibold">{p.title}</h3>
-              <p className="mt-3 leading-relaxed text-charcoal">{p.body}</p>
-            </article>
-          ))}
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <Photo name="water" locale={locale} />
+          <div className="grid gap-5">
+            {c.pillars.map((p, i) => (
+              <article
+                key={p.title}
+                className="reveal card-lift flex items-start gap-5 rounded-3xl border border-black/5 bg-white p-7 shadow-sm"
+              >
+                <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-ink text-white">
+                  <ServiceIcon slug={PILLAR_ICONS[i]} />
+                </span>
+                <div>
+                  <h3 className="text-xl font-semibold">{p.title}</h3>
+                  <p className="mt-2 leading-relaxed text-charcoal">{p.body}</p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </Section>
 
       {/* iLab approved iPhones */}
       <section
         aria-labelledby="approved-title"
-        className="on-dark bg-[#0b0b0c] py-20 text-white md:py-28"
+        className="on-dark dark-texture overflow-hidden bg-[#0b0b0c] py-20 text-white md:py-28"
       >
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-2">
-          <div>
+          <div className="reveal">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/60">
               {c.approvedEyebrow}
             </p>
@@ -303,7 +315,16 @@ export function HomePage({ locale }: { locale: Locale }) {
               </Link>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-3 md:gap-5">
+          <div className="relative">
+            <div
+              aria-hidden
+              className="glow pointer-events-none absolute inset-8 rounded-full bg-sky-300/20 blur-3xl"
+            />
+            <div className="float relative">
+              <Photo name="warranty" locale={locale} className="max-w-sm" />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-3 md:gap-5 lg:col-span-2 lg:mx-auto lg:w-full lg:max-w-xl">
             {[
               "/images/badge-approved.png",
               "/images/badge-shield.png",
@@ -311,7 +332,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             ].map((src, i) => (
               <div
                 key={src}
-                className="relative aspect-square overflow-hidden rounded-3xl bg-white"
+                className="reveal-zoom relative aspect-square overflow-hidden rounded-3xl bg-white"
               >
                 <Image
                   src={src}
@@ -335,15 +356,18 @@ export function HomePage({ locale }: { locale: Locale }) {
       >
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s) => (
-            <li key={s.slug}>
+            <li key={s.slug} className="reveal">
               <a
                 href={waLink(c.svcWa(s.title))}
                 data-track="service-card"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex h-full flex-col justify-between rounded-3xl border border-black/5 bg-white p-6 transition hover:-translate-y-1 hover:shadow-xl"
+                className="group card-lift flex h-full flex-col justify-between rounded-3xl border border-black/5 bg-white p-6"
               >
                 <div>
+                  <span className="mb-5 grid size-12 place-items-center rounded-2xl bg-paper text-ink transition duration-300 group-hover:-rotate-6 group-hover:bg-ink group-hover:text-white">
+                    <ServiceIcon slug={s.slug} />
+                  </span>
                   <h3 className="text-lg font-semibold">{s.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-charcoal">
                     {s.blurb}
@@ -401,11 +425,16 @@ export function HomePage({ locale }: { locale: Locale }) {
           {c.steps.map((s, i) => (
             <li
               key={s.t}
-              className="rounded-3xl border border-black/5 bg-white p-8 shadow-sm"
+              className="reveal card-lift rounded-3xl border border-black/5 bg-white p-8 shadow-sm"
             >
-              <span className="grid size-10 place-items-center rounded-full bg-ink font-display text-sm font-semibold text-white">
-                {i + 1}
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="grid size-10 place-items-center rounded-full bg-ink font-display text-sm font-semibold text-white">
+                  {i + 1}
+                </span>
+                <span className="text-charcoal/40">
+                  <ServiceIcon slug={STEP_ICONS[i]} />
+                </span>
+              </div>
               <h3 className="mt-5 text-xl font-semibold">{s.t}</h3>
               <p className="mt-3 leading-relaxed text-charcoal">{s.b}</p>
             </li>
@@ -413,17 +442,17 @@ export function HomePage({ locale }: { locale: Locale }) {
         </ol>
       </Section>
 
+      <GoogleReviews locale={locale} />
+
       {/* About + device coverage (keyword-rich body copy) */}
-      <Section eyebrow={c.aboutEyebrow} title={c.aboutTitle} className="bg-white">
-        <div className="grid gap-10 text-lg leading-relaxed text-charcoal lg:grid-cols-2">
-          <div className="space-y-5">
-            <p>{c.about[0]}</p>
-            <p>{c.about[1]}</p>
+      <Section eyebrow={c.aboutEyebrow} title={c.aboutTitle}>
+        <div className="grid items-center gap-12 lg:grid-cols-[1.35fr_1fr]">
+          <div className="reveal space-y-5 text-lg leading-relaxed text-charcoal">
+            {c.about.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
           </div>
-          <div className="space-y-5">
-            <p>{c.about[2]}</p>
-            <p>{c.about[3]}</p>
-          </div>
+          <Photo name="showcase" locale={locale} />
         </div>
       </Section>
 
@@ -471,8 +500,8 @@ export function HomePage({ locale }: { locale: Locale }) {
       </Section>
 
       {/* Final CTA */}
-      <section className="on-dark bg-[#0b0b0c] py-20 text-center text-white md:py-28">
-        <div className="mx-auto max-w-3xl px-5">
+      <section className="on-dark dark-texture bg-[#0b0b0c] py-20 text-center text-white md:py-28">
+        <div className="reveal mx-auto max-w-3xl px-5">
           <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-white/10">
             <ShieldIcon width={26} height={26} />
           </span>

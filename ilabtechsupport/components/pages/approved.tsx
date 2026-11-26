@@ -97,6 +97,7 @@ export function ApprovedPhonePage({ locale }: { locale: Locale }) {
       <PageHero
         title={c.h1}
         intro={c.intro}
+        photo={{ name: "warranty", locale }}
         crumbs={[{ name: t.home, href: localePath(locale, "/") }, { name: c.crumb }]}
       />
       <Section title={c.section} intro={c.sectionIntro}>
@@ -104,7 +105,7 @@ export function ApprovedPhonePage({ locale }: { locale: Locale }) {
           {c.points.map((p, i) => (
             <article
               key={p.title}
-              className="overflow-hidden rounded-3xl border border-black/5 bg-white shadow-sm"
+              className="reveal card-lift overflow-hidden rounded-3xl border border-black/5 bg-white shadow-sm"
             >
               <div className="relative aspect-square bg-white">
                 <Image

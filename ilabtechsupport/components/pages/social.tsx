@@ -66,6 +66,7 @@ export function SocialPage({ locale }: { locale: Locale }) {
       <PageHero
         title={c.h1}
         intro={c.intro}
+        photo={{ name: "showcase", locale }}
         crumbs={[{ name: t.home, href: localePath(locale, "/") }, { name: c.h1 }]}
       />
       <Section title={c.section}>
@@ -78,7 +79,7 @@ export function SocialPage({ locale }: { locale: Locale }) {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer me"
-                  className="flex h-full flex-col rounded-3xl border border-black/5 bg-white p-7 transition hover:-translate-y-1 hover:shadow-xl"
+                  className="reveal card-lift flex h-full flex-col rounded-3xl border border-black/5 bg-white p-7"
                 >
                   <Icon width={28} height={28} />
                   <span className="mt-6 font-display text-xl font-semibold">

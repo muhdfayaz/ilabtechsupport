@@ -68,6 +68,101 @@ details > summary::-webkit-details-marker {
   display: none;
 }
 
+/* ---- Subtle motion & depth ---- */
+
+/* Scroll reveals are pure CSS: content is never hidden from crawlers, no-JS
+   visitors or browsers without scroll-driven animations. `transform` and
+   `scale` are used so Tailwind's hover `translate` utilities still work. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal,
+    .reveal-zoom {
+      animation-name: reveal;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+    .reveal-zoom {
+      animation-name: reveal-zoom;
+    }
+  }
+
+  .float {
+    animation: float 7s ease-in-out infinite;
+  }
+  .glow {
+    animation: glow 9s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes reveal-zoom {
+  from {
+    opacity: 0;
+    scale: 0.92;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes float {
+  50% {
+    transform: translateY(-12px);
+  }
+}
+@keyframes glow {
+  from {
+    opacity: 0.45;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+
+.card-lift {
+  transition:
+    translate 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.card-lift:hover {
+  translate: 0 -4px;
+  box-shadow: 0 20px 40px -18px rgb(0 0 0 / 0.25);
+}
+
+.photo-frame {
+  box-shadow: 0 30px 60px -25px rgb(0 0 0 / 0.45);
+}
+
+/* Soft light and a faint dot grid for dark banners. */
+.dark-texture {
+  background-image:
+    radial-gradient(60rem 30rem at 85% 0%, rgb(192 192 192 / 0.16), transparent 70%),
+    radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    22px 22px;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

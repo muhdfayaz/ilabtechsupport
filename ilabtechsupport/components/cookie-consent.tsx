@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
+import { UI, type Locale } from "@/lib/i18n";
 
 type Gtag = (...args: unknown[]) => void;
 declare global {
@@ -31,7 +32,8 @@ function track(name: string, params: Record<string, string>) {
  * Cookie banner (parity with the original site) + a delegated click tracker
  * that reports phone / WhatsApp / directions clicks as GA4 events.
  */
-export function CookieConsent() {
+export function CookieConsent({ locale }: { locale: Locale }) {
+  const t = UI[locale];
   // "server" snapshot keeps the banner out of the prerendered HTML.
   const stored = useSyncExternalStore(subscribe, readStored, () => "server");
   const [dismissed, setDismissed] = useState(false);
@@ -65,6 +67,10 @@ export function CookieConsent() {
         ad_personalization: "granted",
         analytics_storage: "granted",
       });
+      (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq?.(
+        "consent",
+        "grant",
+      );
     }
     setDismissed(true);
   }
@@ -74,13 +80,12 @@ export function CookieConsent() {
   return (
     <div
       role="dialog"
-      aria-label="Cookie notice"
-      className="fixed inset-x-3 bottom-20 z-60 mx-auto max-w-xl rounded-2xl border border-black/10 bg-white/95 p-4 shadow-2xl backdrop-blur md:bottom-6 md:left-auto md:right-6 md:mx-0"
+      aria-label={t.cookieAria}
+      className="fixed inset-x-3 bottom-20 z-60 mx-auto max-w-xl rounded-2xl border border-black/10 bg-white/95 p-4 shadow-2xl backdrop-blur md:bottom-6 md:start-auto md:end-6 md:mx-0"
     >
-      <p className="text-sm font-semibold">This website uses cookies.</p>
+      <p className="text-sm font-semibold">{t.cookieTitle}</p>
       <p className="mt-1 text-sm text-charcoal">
-        We use cookies to analyze website traffic and optimize your website
-        experience.
+        {t.cookieBody}
       </p>
       <div className="mt-3 flex gap-2">
         <button
@@ -88,14 +93,14 @@ export function CookieConsent() {
           onClick={() => decide(true)}
           className="rounded-full bg-ink px-5 py-2 text-sm font-medium text-white transition hover:bg-black"
         >
-          Accept
+          {t.accept}
         </button>
         <button
           type="button"
           onClick={() => decide(false)}
           className="rounded-full px-5 py-2 text-sm font-medium text-charcoal transition hover:bg-black/5"
         >
-          Decline
+          {t.decline}
         </button>
       </div>
     </div>

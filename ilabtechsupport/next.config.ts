@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   /* config options here */
   experimental: {
     agentFeedback: true,
+    // Two root layouts (English + Arabic) need a standalone 404 page.
+    globalNotFound: true,
   },
   cacheComponents: true,
   partialPrefetching: true,

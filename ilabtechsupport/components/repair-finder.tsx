@@ -1,10 +1,10 @@
 "use client";
 
 import { useId, useState } from "react";
-import { BRANCHES, DEVICES, REPAIR_SERVICES, SITE, waLink } from "@/lib/site";
+import { getBranches, getDevices, getServices } from "@/lib/content";
+import { LTR, type Locale } from "@/lib/i18n";
+import { SITE, waLink } from "@/lib/site";
 import { WhatsAppIcon } from "./icons";
-
-const ISSUES = [...REPAIR_SERVICES.map((s) => s.title), "Not sure — need a diagnosis"];
 
 const field =
   "mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none transition focus:border-ink focus:ring-2 focus:ring-ink/10";
@@ -13,23 +13,64 @@ const field =
  * Zero-backend lead capture: composes a pre-filled WhatsApp message so the
  * visitor reaches the team in one tap with device + issue already known.
  */
-export function RepairFinder() {
+const COPY = {
+  en: {
+    aria: "Request a repair",
+    device: "Device",
+    other: "Other",
+    model: "Model",
+    optional: "(optional)",
+    placeholder: "e.g. iPhone 15 Pro",
+    problem: "What's the problem?",
+    unsure: "Not sure — need a diagnosis",
+    branch: "Preferred branch",
+    note: "Sends your details to our team on WhatsApp",
+    cta: "Get my quote on WhatsApp",
+    hi: "Hi iLab, I'd like a repair quote.",
+    lDevice: "Device",
+    lIssue: "Issue",
+    lBranch: "Preferred branch",
+  },
+  ar: {
+    aria: "طلب إصلاح",
+    device: "الجهاز",
+    other: "أخرى",
+    model: "الطراز",
+    optional: "(اختياري)",
+    placeholder: "مثال: iPhone 15 Pro",
+    problem: "ما المشكلة؟",
+    unsure: "لست متأكداً — أحتاج إلى تشخيص",
+    branch: "الفرع المفضل",
+    note: "يرسل بياناتك إلى فريقنا عبر واتساب",
+    cta: "احصل على عرض السعر عبر واتساب",
+    hi: "مرحباً iLab، أود الحصول على عرض سعر لإصلاح جهازي.",
+    lDevice: "الجهاز",
+    lIssue: "المشكلة",
+    lBranch: "الفرع المفضل",
+  },
+} as const;
+
+export function RepairFinder({ locale }: { locale: Locale }) {
+  const c = COPY[locale];
   const id = useId();
+  const DEVICES = getDevices(locale);
+  const BRANCHES = getBranches(locale);
+  const ISSUES = [...getServices(locale).map((s) => s.title), c.unsure];
   const [device, setDevice] = useState<string>(DEVICES[0]);
   const [issue, setIssue] = useState(ISSUES[0]);
   const [model, setModel] = useState("");
   const [branch, setBranch] = useState(BRANCHES[0].area);
 
   const message = [
-    "Hi iLab, I'd like a repair quote.",
-    `Device: ${device}${model.trim() ? ` (${model.trim()})` : ""}`,
-    `Issue: ${issue}`,
-    `Preferred branch: ${branch}`,
+    c.hi,
+    `${c.lDevice}: ${device}${model.trim() ? ` (${model.trim()})` : ""}`,
+    `${c.lIssue}: ${issue}`,
+    `${c.lBranch}: ${branch}`,
   ].join("\n");
 
   return (
     <form
-      aria-label="Request a repair"
+      aria-label={c.aria}
       onSubmit={(e) => {
         e.preventDefault();
         window.open(waLink(message), "_blank", "noopener,noreferrer");
@@ -38,7 +79,7 @@ export function RepairFinder() {
     >
       <div>
         <label htmlFor={`${id}-device`} className="text-sm font-medium">
-          Device
+          {c.device}
         </label>
         <select
           id={`${id}-device`}
@@ -49,17 +90,18 @@ export function RepairFinder() {
           {DEVICES.map((d) => (
             <option key={d}>{d}</option>
           ))}
-          <option>Other</option>
+          <option>{c.other}</option>
         </select>
       </div>
       <div>
         <label htmlFor={`${id}-model`} className="text-sm font-medium">
-          Model <span className="font-normal text-charcoal/70">(optional)</span>
+          {c.model}{" "}
+          <span className="font-normal text-charcoal/70">{c.optional}</span>
         </label>
         <input
           id={`${id}-model`}
           className={field}
-          placeholder="e.g. iPhone 15 Pro"
+          placeholder={c.placeholder}
           value={model}
           onChange={(e) => setModel(e.target.value)}
           autoComplete="off"
@@ -67,7 +109,7 @@ export function RepairFinder() {
       </div>
       <div>
         <label htmlFor={`${id}-issue`} className="text-sm font-medium">
-          What&apos;s the problem?
+          {c.problem}
         </label>
         <select
           id={`${id}-issue`}
@@ -82,7 +124,7 @@ export function RepairFinder() {
       </div>
       <div>
         <label htmlFor={`${id}-branch`} className="text-sm font-medium">
-          Preferred branch
+          {c.branch}
         </label>
         <select
           id={`${id}-branch`}
@@ -97,7 +139,7 @@ export function RepairFinder() {
       </div>
       <div className="flex flex-col items-start gap-3 md:col-span-2 md:flex-row md:items-center md:justify-between">
         <p className="text-sm text-charcoal">
-          Sends your details to our team on WhatsApp ({SITE.phone.display}).
+          {c.note} (<bdi {...LTR}>{SITE.phone.display}</bdi>).
         </p>
         <button
           type="submit"
@@ -105,7 +147,7 @@ export function RepairFinder() {
           className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-wa px-7 py-4 text-sm font-semibold text-black shadow-lg shadow-wa/25 transition hover:brightness-110 md:w-auto"
         >
           <WhatsAppIcon width={18} height={18} />
-          Get my quote on WhatsApp
+          {c.cta}
         </button>
       </div>
     </form>

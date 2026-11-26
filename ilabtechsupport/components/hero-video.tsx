@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { UI, type Locale } from "@/lib/i18n";
 import { PauseIcon, PlayIcon } from "./icons";
 
 /**
@@ -8,7 +9,8 @@ import { PauseIcon, PlayIcon } from "./icons";
  * (autoplay, loop, muted, inline, object-fit: cover), plus a pause control and
  * reduced-motion support.
  */
-export function HeroVideo() {
+export function HeroVideo({ locale }: { locale: Locale }) {
+  const t = UI[locale];
   const ref = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(true);
 
@@ -47,8 +49,8 @@ export function HeroVideo() {
       <button
         type="button"
         onClick={toggle}
-        aria-label={playing ? "Pause background video" : "Play background video"}
-        className="absolute right-5 top-24 z-20 grid size-10 place-items-center rounded-full border border-white/25 bg-black/30 text-white backdrop-blur transition hover:bg-black/50 md:top-28"
+        aria-label={playing ? t.pauseVideo : t.playVideo}
+        className="absolute end-5 top-24 z-20 grid size-10 place-items-center rounded-full border border-white/25 bg-black/30 text-white backdrop-blur transition hover:bg-black/50 md:top-28"
       >
         {playing ? <PauseIcon width={14} height={14} /> : <PlayIcon width={14} height={14} />}
       </button>

@@ -1,10 +1,11 @@
-import { FAQS } from "@/lib/site";
+import { getFaqs } from "@/lib/content";
+import type { Locale } from "@/lib/i18n";
 import { PlusIcon } from "./icons";
 
-export function Faq() {
+export function Faq({ locale }: { locale: Locale }) {
   return (
     <div className="divide-y divide-black/10 rounded-3xl border border-black/5 bg-white">
-      {FAQS.map((f) => (
+      {getFaqs(locale).map((f) => (
         <details key={f.q} className="group px-6 py-5 md:px-8">
           <summary className="flex cursor-pointer items-center justify-between gap-6 font-display text-base font-medium md:text-lg">
             {f.q}

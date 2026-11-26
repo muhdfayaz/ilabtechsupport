@@ -9,14 +9,16 @@ export const SITE_URL = (
 
 export const SITE = {
   name: "iLab Tech Support",
-  fullName: "iLab Tech Support | iPhone & Apple Repair Bahrain",
+  fullName: "iLab Tech Support | iPhone & Apple Repair in Bahrain",
   description:
     "iLab Tech Support provides professional iPhone, iPad, Samsung and PlayStation repairs in Bahrain. Visit our service centers for expert repairs and support.",
   locale: "en_BH",
   year: 2026,
   phone: { tel: "+97333175700", display: "+973 3317 5700", wa: "97333175700" },
   phone2: { tel: "+97333476777", display: "+973 3347 6777", wa: "97333476777" },
-  email: "service@ilabtechsupport.com",
+  // Split so the address never appears as plain text in HTML (scraper-safe).
+  emailUser: "service",
+  emailDomain: "ilabtechsupport.com",
   poweredBy: "ione group intl",
   themeColor: "#c0c0c0",
   verification: {
@@ -26,6 +28,7 @@ export const SITE = {
   analytics: {
     ga4: ["G-QHQ9Y2QWP4", "G-BF2FDR6KMM"],
     ads: "AW-968033775",
+    fbPixel: "17841462218027021",
   },
   social: {
     facebook: "https://www.facebook.com/profile.php?id=61582161868855",
@@ -33,7 +36,12 @@ export const SITE = {
       "https://www.instagram.com/ilabtechsupport?igsh=MWU0b2l5amt5YmdpYQ%3D%3D",
     tiktok: "https://www.tiktok.com/@ilabtechsupport",
     youtube: "https://www.youtube.com/@ilabtechsupport",
+    // Create these profiles, then paste the URLs here — they will appear
+    // in the footer and in the Organization `sameAs` automatically.
+    x: "",
+    linkedin: "",
   },
+  youtubeChannel: "https://www.youtube.com/channel/UCChvv_yK6Z9rE47fFobX4w",
 } as const;
 
 export function waLink(message?: string, number: string = SITE.phone.wa) {
@@ -47,6 +55,7 @@ export type Branch = {
   area: string;
   streetAddress: string;
   locality: string;
+  region: string;
   country: "BH";
   mapsUrl: string;
   reviewUrl: string;
@@ -59,7 +68,8 @@ export const BRANCHES: Branch[] = [
     name: "iLab Tech Support – Dana Mall, Seef",
     area: "Dana Mall, Seef",
     streetAddress: "Dana Mall, Seef",
-    locality: "Seef, Bahrain",
+    locality: "Seef, Manama",
+    region: "Capital Governorate",
     country: "BH",
     mapsUrl:
       "https://www.google.com/maps/search/?api=1&query=ilab+tech+support+Dana+Mall+Seef+Bahrain",
@@ -71,7 +81,8 @@ export const BRANCHES: Branch[] = [
     name: "iLab Tech Support – Exhibition Avenue, Hoora",
     area: "Exhibition Avenue, Hoora",
     streetAddress: "Exhibition Avenue, Hoora",
-    locality: "Manama, Bahrain",
+    locality: "Manama",
+    region: "Capital Governorate",
     country: "BH",
     mapsUrl: "https://share.google/nvpRSquIsxHWZFAnX",
     reviewUrl: "https://g.page/r/CUQoPtQaA23aEBM/review",
@@ -82,7 +93,8 @@ export const BRANCHES: Branch[] = [
     name: "iLab Tech Support – Umm Al Hassam",
     area: "Umm Al Hassam",
     streetAddress: "Umm Al Hassam Avenue",
-    locality: "Manama, Bahrain",
+    locality: "Manama",
+    region: "Capital Governorate",
     country: "BH",
     mapsUrl: "https://share.google/4dpQMxF34mILJtC44",
     reviewUrl: "https://g.page/r/CU3od4L31oFDEBM/review",
